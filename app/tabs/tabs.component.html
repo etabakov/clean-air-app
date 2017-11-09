@@ -1,0 +1,12 @@
+<ActionBar class="action-bar">
+    <Label class="action-bar-title" [text]="title"></Label>
+</ActionBar>
+
+<TabView (selectedIndexChanged)="onSelectedIndexChanged($event)">
+    <StackLayout *tabItem="{title: 'Map'}">
+        <Map></Map>
+    </StackLayout>
+    <StackLayout *tabItem="{title: 'Settings'}">
+        <Settings></Settings>
+    </StackLayout>
+</TabView>
