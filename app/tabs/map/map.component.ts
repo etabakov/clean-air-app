@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { Http } from "@angular/http";
+import { SensorService } from "../../services/sensor.service";
 
 @Component({
     selector: "Map",
@@ -6,15 +8,26 @@ import { Component, OnInit } from "@angular/core";
     templateUrl: "./map.component.html"
 })
 export class MapComponent implements OnInit {
-    constructor() {
-        /* ***********************************************************
-        * Use the constructor to inject services.
-        *************************************************************/
+    private markers : Array<any>;
+
+    constructor(private sensorService: SensorService) {
     }
 
     ngOnInit(): void {
-        /* ***********************************************************
-        * Use the "ngOnInit" handler to initialize data for the view.
-        *************************************************************/
+        this.sensorService.getAllDustSensors()
+                            .do(sensors => {
+                                for(var sensor of sensors) {
+                                    this.markers.push({
+                                        lat: sensor.latitude,
+                                        lng: sensor.longitude,
+                                        id: sensor.id,
+                                        title: sensor.f100
+                                    });
+                                }
+                            }).subscribe();
+    }
+
+    onMapReady(args) {
+        args.map.addMarkers(this.markers);
     }
 }
