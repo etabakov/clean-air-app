@@ -16,12 +16,14 @@ export class MapComponent implements OnInit {
     ngOnInit(): void {
         this.sensorService.getAllDustSensors()
                             .do(sensors => {
+                                this.markers = new Array<any>();
+
                                 for(var sensor of sensors) {
                                     this.markers.push({
                                         lat: sensor.latitude,
                                         lng: sensor.longitude,
                                         id: sensor.id,
-                                        title: sensor.f100
+                                        title: sensor.f100.toString()
                                     });
                                 }
                             }).subscribe();
