@@ -1,5 +1,5 @@
-<GridLayout class="page page-content">
-    <ContentView height="100%" width="100%">
+<GridLayout class="page page-content" rows="*, auto" columns="*">
+    <ContentView height="100%" width="100%" col="0" row="0">
         <Mapbox
             accessToken="pk.eyJ1IjoiZXRhYmFrb3YiLCJhIjoiY2o5c29qdnA5NmthNjJxcXFiN2RxMG1qMCJ9.xNUu5J82C7VqDBTUwpcuIQ"
             mapStyle="traffic_day"
@@ -14,5 +14,6 @@
             disableTilt="false"
             (mapReady)="onMapReady($event)">
         </Mapbox>
-      </ContentView>
+    </ContentView>
+    <Label [text]="markerDetails" col="0" row="1" style="background-color: black; color: white"></Label>
 </GridLayout>
