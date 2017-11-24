@@ -1,6 +1,7 @@
-<GridLayout rows="auto" columns="* auto">
-    <Label [text]="'id: ' + sensor.id + ' ' + sensor.f100 + ' ' + sensor.f25" col="0"
-        row="0"></Label>
-    <Label class="fa fav" [text]="sensor.isFav ? '\uf005' :'\uf006'" col="1" row="0"
+<GridLayout rows="auto" columns="auto auto auto *" class="sensor-detail">
+    <Label [text]="'id: ' + sensor.id" col="0"></Label>
+    <Label [text]="'F100: ' + sensor.f100" col="1"></Label>
+    <Label [text]="'F25: ' + sensor.f25" col="2"></Label>
+    <Label class="fa fav" [text]="sensor.isFav ? '\uf005' :'\uf006'" col="3"
         (tap)="toggle.next(sensor)"></Label>
 </GridLayout>

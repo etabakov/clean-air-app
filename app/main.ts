@@ -4,5 +4,8 @@ import { platformNativeScriptDynamic } from "nativescript-angular/platform";
 import { AppModule } from "./app.module";
 import { registerElement } from "nativescript-angular/element-registry";
 
-registerElement("Mapbox", () => require("nativescript-mapbox").MapboxView);
+registerElement(
+    "MapView",
+    () => require("nativescript-google-maps-sdk").MapView
+);
 platformNativeScriptDynamic().bootstrapModule(AppModule);

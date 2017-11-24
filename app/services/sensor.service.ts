@@ -8,7 +8,7 @@ import { selectedIndexProperty } from "tns-core-modules/ui/tab-view/tab-view";
 
 // const getAllURL = "https://api.luftdaten.info/static/v2/data.dust.min.json";
 const getAllUrlLocal =
-    "https://api.luftdaten.info/v1/filter/area=42.698334,23.319941,10&type=SDS011";
+    "https://api.luftdaten.info/v1/filter/area=42.698334,23.319941,4&type=SDS011";
 
 const singleSensorUrl = "https://api.luftdaten.info/v1/sensor/";
 
@@ -95,8 +95,8 @@ export class SensorService {
         return new Sensor(
             element.sensor.id,
             element.timestamp,
-            element.location.latitude,
-            element.location.longitude,
+            parseFloat(element.location.latitude),
+            parseFloat(element.location.longitude),
             p100,
             p25,
             this.local.isFav(id)

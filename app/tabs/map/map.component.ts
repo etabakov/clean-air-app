@@ -9,6 +9,17 @@ import { Http } from "@angular/http";
 import { SensorService } from "../../services/sensor.service";
 import { Sensor } from "../../models/sensor.model";
 
+import {
+    MapView,
+    Marker,
+    Position,
+    Circle,
+    Shape,
+    ShapeEventData
+} from "nativescript-google-maps-sdk";
+import { Color } from "tns-core-modules/color";
+import { colorProperty } from "tns-core-modules/ui/frame/frame";
+
 @Component({
     selector: "Map",
     moduleId: module.id,
@@ -16,7 +27,8 @@ import { Sensor } from "../../models/sensor.model";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent {
-    markers: Array<any>;
+    mapView: MapView;
+    lastCamera: string;
     selectedSensor: Sensor;
 
     constructor(
@@ -24,34 +36,73 @@ export class MapComponent {
         private cdRef: ChangeDetectorRef
     ) {}
 
-    onMapReady(args) {
+    onMapReady(event) {
+        console.log("Map Ready");
+        this.mapView = event.object;
+
+        console.log("Setting a marker...");
         this.sensorService
             .getAllDustSensors()
             .do(sensors => {
-                this.markers = new Array<any>();
-
                 for (const sensor of sensors) {
-                    this.markers.push({
-                        sensor,
-                        lat: sensor.latitude,
-                        lng: sensor.longitude,
-                        id: sensor.id,
-                        title: sensor.f100.toString(),
-                        iconPath: "resources/green.png",
-                        onTap: zonedCallback(marker => {
-                            console.log("HERE: " + marker.sensor);
-                            this.selectedSensor = marker.sensor;
-                            this.cdRef.markForCheck();
-                        })
-                    });
-                }
+                    const circle = this.createCircle(sensor);
 
-                args.map.addMarkers(this.markers);
+                    this.mapView.addCircle(circle);
+                }
             })
             .subscribe();
     }
 
+    private createCircle(sensor: Sensor): Circle {
+        const circle = new Circle();
+        circle.center = Position.positionFromLatLng(
+            sensor.latitude,
+            sensor.longitude
+        );
+        circle.radius = 100;
+        circle.strokeWidth = 0;
+
+        circle.fillColor = this.getColor(sensor.f100);
+        circle.clickable = true;
+        circle.userData = sensor;
+        return circle;
+    }
+
+    private getColor(value: number): Color {
+        if (value < 35) {
+            return new Color("#4400AA00");
+        } else if (value < 50) {
+            return new Color("#44999900");
+        } else if (value < 50) {
+            return new Color("#44990000");
+        } else {
+            return new Color("#44FF2222");
+        }
+    }
+
+    onCoordinateTapped(args) {
+        console.log(
+            "Coordinate Tapped, Lat: " +
+                args.position.latitude +
+                ", Lon: " +
+                args.position.longitude,
+            args
+        );
+    }
+
+    onShapeSelect(args: ShapeEventData) {
+        this.selectedSensor = args.shape.userData;
+    }
+
     toggleFav(sensor: Sensor) {
         this.sensorService.toggleFav(sensor);
+    }
+
+    onCameraChanged(args) {
+        console.log(
+            "Camera changed: " + JSON.stringify(args.camera),
+            JSON.stringify(args.camera) === this.lastCamera
+        );
+        this.lastCamera = JSON.stringify(args.camera);
     }
 }
