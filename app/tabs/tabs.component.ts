@@ -1,6 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { isAndroid } from "platform";
-import { SelectedIndexChangedEventData, TabView, TabViewItem } from "tns-core-modules/ui/tab-view";
+import {
+    SelectedIndexChangedEventData,
+    TabView,
+    TabViewItem
+} from "tns-core-modules/ui/tab-view";
 import { Page } from "ui/page";
 
 @Component({
@@ -10,39 +14,20 @@ import { Page } from "ui/page";
     styleUrls: ["./tabs.component.css"]
 })
 export class TabsComponent implements OnInit {
-
-    private _title: string;
+    selectedIndex = 0;
 
     constructor(private _page: Page) {
-        /* ***********************************************************
-        * Use the constructor to inject app services that will be needed for
-        * the whole tab navigation layout as a whole.
-        *************************************************************/
+        /************************************************************
+         * Use the constructor to inject app services that will be needed for
+         * the whole tab navigation layout as a whole.
+         *************************************************************/
     }
 
     ngOnInit(): void {
-        this._page.actionBarHidden = true;
+        this._page.actionBarHidden = false;
     }
 
-    get title(): string {
-        return this._title;
-    }
-
-    set title(value: string) {
-        if (this._title !== value) {
-            this._title = value;
-        }
-    }
-
-    /* ***********************************************************
-    * Get the current tab view title and set it as an ActionBar title.
-    * Learn more about the onSelectedIndexChanged event here:
-    * https://docs.nativescript.org/cookbook/ui/tab-view#using-selectedindexchanged-event-from-xml
-    *************************************************************/
     onSelectedIndexChanged(args: SelectedIndexChangedEventData) {
-        const tabView = <TabView>args.object;
-        const selectedTabViewItem = tabView.items[args.newIndex];
-
-        this.title = selectedTabViewItem.title;
+        this.selectedIndex = args.newIndex;
     }
 }

@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { Http } from "@angular/http";
 import { SensorService } from "../../services/sensor.service";
-import { FavoritesService } from "../../services/favourites.service";
+import { FavouritesService } from "../../services/favourites.service";
 import { Sensor } from "../../models/sensor.model";
 
 @Component({
@@ -22,7 +22,7 @@ export class MapComponent {
 
     constructor(
         private sensorService: SensorService,
-        private favService: FavoritesService,
+        private favService: FavouritesService,
         private cdRef: ChangeDetectorRef
     ) {}
 

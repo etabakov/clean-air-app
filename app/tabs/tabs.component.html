@@ -3,7 +3,7 @@
         <Map></Map>
     </StackLayout>
     <StackLayout *tabItem="{title: 'Favourites'}">
-        <Favourites></Favourites>
+        <Favourites *ngIf="selectedIndex === 1"></Favourites>
     </StackLayout>
     <StackLayout *tabItem="{title: 'Settings'}">
         <Settings></Settings>

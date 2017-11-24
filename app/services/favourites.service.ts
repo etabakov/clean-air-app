@@ -15,11 +15,12 @@ function readFromLocalStorage(): number[] {
 
 function saveToLocalStorage(sensorIds: number[]) {
     const data = JSON.stringify(sensorIds);
+    console.log("saving: " + data);
     localStorage.setString(SENSORS_KEY, data);
 }
 
 @Injectable()
-export class FavoritesService {
+export class FavouritesService {
     private sensorIds: number[];
 
     constructor(private sensorService: SensorService) {
@@ -30,9 +31,11 @@ export class FavoritesService {
         console.dir(this.sensorIds);
 
         if (this.sensorIds.length) {
-            Observable.from(this.sensorIds).flatMap(id =>
-                this.sensorService.getSensorByID(id)
-            );
+            return Observable.from(this.sensorIds)
+                .map(id => {
+                    return this.sensorService.getSensorByID(id);
+                })
+                .combineAll();
         } else {
             return Observable.from([]);
         }

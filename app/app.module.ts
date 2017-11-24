@@ -7,7 +7,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 
 import { SensorService } from "./services/sensor.service";
-import { FavoritesService } from "./services/favourites.service";
+import { FavouritesService } from "./services/favourites.service";
 
 @NgModule({
     bootstrap: [
@@ -25,7 +25,7 @@ import { FavoritesService } from "./services/favourites.service";
     providers: [
         { provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader },
         SensorService,
-        FavoritesService
+        FavouritesService
     ],
     schemas: [
         NO_ERRORS_SCHEMA
