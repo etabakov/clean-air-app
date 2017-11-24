@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { FavouritesService } from "../../services/favourites.service";
 import { Sensor } from "../../models/sensor.model";
 import { Observable } from "rxjs/Observable";
+import { SensorService } from "../../services/sensor.service";
 
 @Component({
     selector: "Favourites",
@@ -10,11 +10,15 @@ import { Observable } from "rxjs/Observable";
 })
 export class FavouritesComponent implements OnInit {
     sensors$: Observable<Sensor[]>;
-    constructor(public favService: FavouritesService) {
+    constructor(public sensorService: SensorService) {
         console.log("FavouritesComponent constructor");
     }
 
     ngOnInit() {
-        this.sensors$ = this.favService.getAll();
+        this.sensors$ = this.sensorService.getFavs();
+    }
+    
+    toggleFav(sensor: Sensor) {
+        this.sensorService.toggleFav(sensor);
     }
 }

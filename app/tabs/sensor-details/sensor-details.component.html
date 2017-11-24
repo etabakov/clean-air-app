@@ -1,0 +1,6 @@
+<GridLayout rows="auto" columns="* auto">
+    <Label [text]="'id: ' + sensor.id + ' ' + sensor.f100 + ' ' + sensor.f25" col="0"
+        row="0"></Label>
+    <Label class="fa fav" [text]="sensor.isFav ? '\uf005' :'\uf006'" col="1" row="0"
+        (tap)="toggle.next(sensor)"></Label>
+</GridLayout>

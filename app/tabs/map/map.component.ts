@@ -7,7 +7,6 @@ import {
 } from "@angular/core";
 import { Http } from "@angular/http";
 import { SensorService } from "../../services/sensor.service";
-import { FavouritesService } from "../../services/favourites.service";
 import { Sensor } from "../../models/sensor.model";
 
 @Component({
@@ -22,7 +21,6 @@ export class MapComponent {
 
     constructor(
         private sensorService: SensorService,
-        private favService: FavouritesService,
         private cdRef: ChangeDetectorRef
     ) {}
 
@@ -41,6 +39,7 @@ export class MapComponent {
                         title: sensor.f100.toString(),
                         iconPath: "resources/green.png",
                         onTap: zonedCallback(marker => {
+                            console.log("HERE: " + marker.sensor);
                             this.selectedSensor = marker.sensor;
                             this.cdRef.markForCheck();
                         })
@@ -52,11 +51,7 @@ export class MapComponent {
             .subscribe();
     }
 
-    toggleFavourite(sensor: Sensor) {
-        if (this.favService.isFavourite(sensor.id)) {
-            this.favService.remove(sensor.id);
-        } else {
-            this.favService.add(sensor.id);
-        }
+    toggleFav(sensor: Sensor) {
+        this.sensorService.toggleFav(sensor);
     }
 }

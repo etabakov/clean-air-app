@@ -6,5 +6,6 @@ export class Sensor {
         public longitude: string,
         public f100: number,
         public f25: number,
+        public isFav?: boolean
     ) {}
 }

@@ -11,7 +11,7 @@
     "directive-class-suffix": true,
     "invoke-injectable": true,
     "member-access": [true, "no-public"],
-    "newline-before-return": true,
+    "newline-before-return": false,
     "no-access-missing-member": true,
     "no-angle-bracket-type-assertion": false,
     "no-attribute-parameter-decorator": true,

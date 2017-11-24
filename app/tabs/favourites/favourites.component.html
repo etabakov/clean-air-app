@@ -1,4 +1,5 @@
 <StackLayout>
-    <Label *ngFor="let sensor of sensors$ | async" 
-        [text]="'id: ' + sensor.id + ' ' + sensor.f100 + ' ' + sensor.f25"></Label>
+    <sensor-details 
+        *ngFor="let sensor of sensors$ | async" 
+        [sensor]="sensor" (toggle)="toggleFav($event)"></sensor-details>
 </StackLayout>

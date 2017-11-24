@@ -6,20 +6,17 @@ import { SettingsComponent } from "./settings/settings.component";
 import { TabsRoutingModule } from "./tabs-routing.module";
 import { TabsComponent } from "./tabs.component";
 import { FavouritesComponent } from "./favourites/favourites.component";
+import { SensorDetailsComponent } from "./sensor-details/sensor-details.component";
 
 @NgModule({
-    imports: [
-        NativeScriptModule,
-        TabsRoutingModule
-    ],
+    imports: [NativeScriptModule, TabsRoutingModule],
     declarations: [
         TabsComponent,
         MapComponent,
         SettingsComponent,
-        FavouritesComponent
+        FavouritesComponent,
+        SensorDetailsComponent
     ],
-    schemas: [
-        NO_ERRORS_SCHEMA
-    ]
+    schemas: [NO_ERRORS_SCHEMA]
 })
-export class TabsModule { }
+export class TabsModule {}

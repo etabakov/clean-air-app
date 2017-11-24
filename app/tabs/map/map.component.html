@@ -1,21 +1,11 @@
 <GridLayout class="page page-content" rows="*, auto" columns="*">
-    <Mapbox
-        accessToken="pk.eyJ1IjoiZXRhYmFrb3YiLCJhIjoiY2o5c29qdnA5NmthNjJxcXFiN2RxMG1qMCJ9.xNUu5J82C7VqDBTUwpcuIQ"
-        mapStyle="traffic_day"
-        latitude="42.698334"
-        longitude="23.319941"
-        hideCompass="true"
-        zoomLevel="10"
-        showUserLocation="true"
-        disableZoom="false"
-        disableRotation="false"
-        disableScroll="false"
-        disableTilt="false"
-        (mapReady)="onMapReady($event)">
+    <Mapbox accessToken="pk.eyJ1IjoiZXRhYmFrb3YiLCJhIjoiY2o5c29qdnA5NmthNjJxcXFiN2RxMG1qMCJ9.xNUu5J82C7VqDBTUwpcuIQ"
+        mapStyle="traffic_day" latitude="42.698334" longitude="23.319941" hideCompass="true"
+        zoomLevel="10" showUserLocation="true" disableZoom="false" disableRotation="false"
+        disableScroll="false" disableTilt="false" (mapReady)="onMapReady($event)">
     </Mapbox>
 
-    <Label *ngIf="selectedSensor" 
-        [text]="'id: ' + selectedSensor.id + ' ' + selectedSensor.f100 + ' ' + selectedSensor.f25"
-        col="0" row="1" 
-        style="background-color: black; color: white" (tap)="toggleFavourite(selectedSensor)"></Label>
+    <StackLayout row="1">
+        <sensor-details *ngIf="selectedSensor" [sensor]="selectedSensor" (toggle)="toggleFav($event)"></sensor-details>
+    </StackLayout>
 </GridLayout>
