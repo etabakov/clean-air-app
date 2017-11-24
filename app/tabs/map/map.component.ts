@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ChangeDetectorRef,
+    ChangeDetectionStrategy,
+    NgZone
+} from "@angular/core";
 import { Http } from "@angular/http";
 import { SensorService } from "../../services/sensor.service";
 
@@ -6,40 +12,50 @@ import { SensorService } from "../../services/sensor.service";
     selector: "Map",
     moduleId: module.id,
     templateUrl: "./map.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush 
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements OnInit {
-    private markers : Array<any>;
-    private markerDetails: string = "test";
+    markers: Array<any>;
+    markerDetails: string = "test";
 
-    constructor(private sensorService: SensorService) {
-    }
+    constructor(private sensorService: SensorService,
+        private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
     }
 
     onMapReady(args) {
-        const that = this;
-        this.sensorService.getAllDustSensors()
-        .do(sensors => {
-            this.markers = new Array<any>();
+        this.sensorService
+            .getAllDustSensors()
+            .do((sensors) => {
+                this.markers = new Array<any>();
 
-            for(var sensor of sensors) {
-                this.markers.push({
-                    lat: sensor.latitude,
-                    lng: sensor.longitude,
-                    id: sensor.id,
-                    title: sensor.f100.toString(),
-                    iconPath: "resources/green.png",
-                    onTap: function(marker) {
-                        console.log("id: " + marker.id + " p100: " + marker.title + that.markerDetails);
-                        that.markerDetails = "id: " + marker.id + " p100: " + marker.title;
-                    }
-                });
-            }
+                for (const sensor of sensors) {
+                    this.markers.push({
+                        lat: sensor.latitude,
+                        lng: sensor.longitude,
+                        id: sensor.id,
+                        title: sensor.f100.toString(),
+                        iconPath: "resources/green.png",
+                        onTap: zonedCallback((marker) => {
+                            console.log("Zone: " + NgZone.isInAngularZone());
+                            console.log("this: " + this);
+                            console.log(
+                                "id: " +
+                                    marker.id +
+                                    " p100: " +
+                                    marker.title +
+                                    this.markerDetails
+                            );
+                            this.markerDetails =
+                                "id: " + marker.id + " p100: " + marker.title;
+                            this.cdRef.markForCheck();
+                        })
+                    });
+                }
 
-            args.map.addMarkers(this.markers);
-        }).subscribe();
-        
+                args.map.addMarkers(this.markers);
+            })
+            .subscribe();
     }
 }

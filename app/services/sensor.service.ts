@@ -12,7 +12,7 @@ export class SensorService {
         const headers = new Headers();
         headers.append("Content-Type", "application/json");
 
-        return this.http.get("http://api.luftdaten.info/static/v2/data.dust.min.json", { headers: headers })
+        return this.http.get("https://api.luftdaten.info/static/v2/data.dust.min.json", { headers: headers })
                     .map(res => {
                         const sensors = Array<Sensor>();
 
@@ -30,6 +30,6 @@ export class SensorService {
                         });
 
                         return sensors;
-                    })
+                    });
     }
 }
