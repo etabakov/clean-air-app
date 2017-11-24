@@ -38,6 +38,11 @@ export class MapComponent {
 
     onMapReady(event) {
         console.log("Map Ready");
+
+        if (this.mapView === event.object) {
+            return;
+        }
+
         this.mapView = event.object;
 
         console.log("Setting a marker...");
