@@ -4,7 +4,8 @@
     "node_modules/codelyzer"
   ],
   "rules": {
-    "array-type": [true, "generic"],
+    "array-type": false,
+    "arrow-parens": false,
     "arrow-return-shorthand": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
@@ -35,6 +36,7 @@
     "use-pipe-transform-interface": true,
     "template-to-ng-template": true,
     "templates-use-public": true,
+    "ordered-imports": false,
     "trailing-comma": [true, {
       "multiline": "never",
       "singleline": "never"

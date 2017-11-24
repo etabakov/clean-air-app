@@ -7,6 +7,8 @@ import {
 } from "@angular/core";
 import { Http } from "@angular/http";
 import { SensorService } from "../../services/sensor.service";
+import { FavoritesService } from "../../services/favourites.service";
+import { Sensor } from "../../models/sensor.model";
 
 @Component({
     selector: "Map",
@@ -14,41 +16,32 @@ import { SensorService } from "../../services/sensor.service";
     templateUrl: "./map.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapComponent implements OnInit {
+export class MapComponent {
     markers: Array<any>;
-    markerDetails: string = "test";
+    selectedSensor: Sensor;
 
-    constructor(private sensorService: SensorService,
-        private cdRef: ChangeDetectorRef) {}
-
-    ngOnInit(): void {
-    }
+    constructor(
+        private sensorService: SensorService,
+        private favService: FavoritesService,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     onMapReady(args) {
         this.sensorService
             .getAllDustSensors()
-            .do((sensors) => {
+            .do(sensors => {
                 this.markers = new Array<any>();
 
                 for (const sensor of sensors) {
                     this.markers.push({
+                        sensor,
                         lat: sensor.latitude,
                         lng: sensor.longitude,
                         id: sensor.id,
                         title: sensor.f100.toString(),
                         iconPath: "resources/green.png",
-                        onTap: zonedCallback((marker) => {
-                            console.log("Zone: " + NgZone.isInAngularZone());
-                            console.log("this: " + this);
-                            console.log(
-                                "id: " +
-                                    marker.id +
-                                    " p100: " +
-                                    marker.title +
-                                    this.markerDetails
-                            );
-                            this.markerDetails =
-                                "id: " + marker.id + " p100: " + marker.title;
+                        onTap: zonedCallback(marker => {
+                            this.selectedSensor = marker.sensor;
                             this.cdRef.markForCheck();
                         })
                     });
@@ -57,5 +50,13 @@ export class MapComponent implements OnInit {
                 args.map.addMarkers(this.markers);
             })
             .subscribe();
+    }
+
+    toggleFavourite(sensor: Sensor) {
+        if (this.favService.isFavourite(sensor.id)) {
+            this.favService.remove(sensor.id);
+        } else {
+            this.favService.add(sensor.id);
+        }
     }
 }

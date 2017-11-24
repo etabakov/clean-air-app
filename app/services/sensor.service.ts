@@ -2,34 +2,67 @@ import { Injectable } from "@angular/core";
 import { Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { Sensor } from "../models/sensor.model";
-import 'rxjs/Rx';
+import "rxjs/Rx";
+
+// const getAllURL = "https://api.luftdaten.info/static/v2/data.dust.min.json";
+const getAllUrlLocal =
+    "https://api.luftdaten.info/v1/filter/area=42.698334,23.319941,10&type=SDS011";
+
+const singleSensorUrl = "https://api.luftdaten.info/v1/sensor/";
+
+const headers = new Headers({ "Content-Type": "application/json" });
+
+function parseSensorData(element: any): Sensor {
+    if (!element) {
+        return null;
+    }
+
+    const p100 = element.sensordatavalues[0]
+        ? element.sensordatavalues[0].value
+        : NaN;
+    const p25 = element.sensordatavalues[1]
+        ? element.sensordatavalues[1].value
+        : NaN;
+
+    return new Sensor(
+        element.sensor.id,
+        element.timestamp,
+        element.location.latitude,
+        element.location.longitude,
+        p100,
+        p25
+    );
+}
 
 @Injectable()
 export class SensorService {
     constructor(private http: Http) {}
 
-    getAllDustSensors() : Observable<Sensor[]> {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
+    getAllDustSensors(): Observable<Sensor[]> {
+        return this.http
+            .get(getAllUrlLocal, {
+                headers
+            })
+            .map(res => {
+                const rawData = res.json();
+                // console.log("RAW:");
+                // console.dir(rawData);
 
-        return this.http.get("https://api.luftdaten.info/static/v2/data.dust.min.json", { headers: headers })
-                    .map(res => {
-                        const sensors = Array<Sensor>();
+                const sensors = rawData.map(parseSensorData);
+                // console.log("RESULTS:");
+                // console.dir(sensors);
 
-                        res.json().forEach(element => {
-                            const p100 = element.sensordatavalues[0].value;
-                            const p25 = element.sensordatavalues[1].value;
+                return sensors;
+            });
+    }
 
-                            sensors.push(new Sensor(
-                                element.id, 
-                                element.timestamp, 
-                                element.location.latitude, 
-                                element.location.longitude, 
-                                p100, 
-                                p25));
-                        });
+    getSensorByID(id: number): Observable<Sensor> {
+        return this.http.get(singleSensorUrl + id, { headers }).map(res => {
+            const rawData: Array<any> = res.json();
 
-                        return sensors;
-                    });
+            const element = rawData.length ? rawData[rawData.length - 1] : null;
+
+            return parseSensorData(element);
+        });
     }
 }
