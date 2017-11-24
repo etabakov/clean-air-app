@@ -5,6 +5,7 @@ import { MapComponent } from "./map/map.component";
 import { SettingsComponent } from "./settings/settings.component";
 import { TabsRoutingModule } from "./tabs-routing.module";
 import { TabsComponent } from "./tabs.component";
+import { FavouritesComponent } from "./favourites/favourites.component";
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import { TabsComponent } from "./tabs.component";
     declarations: [
         TabsComponent,
         MapComponent,
-        SettingsComponent
+        SettingsComponent,
+        FavouritesComponent
     ],
     schemas: [
         NO_ERRORS_SCHEMA
