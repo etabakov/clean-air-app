@@ -1,0 +1,29 @@
+@import 'nativescript-theme-core/css/core.light.css';
+
+TabView {
+    tab-text-color: #022734;
+    selected-tab-text-color: #022734;
+    android-selected-tab-text-color: #022734;
+    android-selected-tab-highlight-color: #3A53FF
+}
+
+.fa {
+    font-family: "FontAwesome"
+}
+
+.fav {
+    font-size: 32;
+    margin: 16;
+    horizontal-align: right;
+    vertical-align: center
+}
+
+.sensor-detail {
+    background-color: rgba(255, 255, 255, 0.9);
+    font-size: 18
+}
+
+.sensor-detail Label {
+    vertical-align: center;
+    margin: 8 16
+}

@@ -10,8 +10,7 @@ import { Page } from "ui/page";
 @Component({
     selector: "TabsComponent",
     moduleId: module.id,
-    templateUrl: "./tabs.component.html",
-    styleUrls: ["./tabs.component.css"]
+    templateUrl: "./tabs.component.html"
 })
 export class TabsComponent implements OnInit {
     selectedIndex = 0;
