@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { Sensor } from "../models/sensor.model";
-import "rxjs/Rx";
 import { LocalStorageService } from "./local-storage.service";
 import { selectedIndexProperty } from "tns-core-modules/ui/tab-view/tab-view";
 

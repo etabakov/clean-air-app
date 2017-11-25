@@ -1,4 +1,5 @@
 require("./vendor-platform");
+require("./rxjs-operators");
 
 require("reflect-metadata");
 require("@angular/platform-browser");
@@ -11,3 +12,4 @@ require("@angular/router");
 require("nativescript-angular/platform-static");
 require("nativescript-angular/forms");
 require("nativescript-angular/router");
+
