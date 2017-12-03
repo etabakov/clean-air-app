@@ -44,18 +44,6 @@ export class MapComponent {
         }
 
         this.mapView = event.object;
-
-        console.log("Setting a marker...");
-        this.sensorService
-            .getAllDustSensors()
-            .do(sensors => {
-                for (const sensor of sensors) {
-                    const circle = this.createCircle(sensor);
-
-                    this.mapView.addCircle(circle);
-                }
-            })
-            .subscribe();
     }
 
     private createCircle(sensor: Sensor): Circle {
@@ -109,5 +97,22 @@ export class MapComponent {
             JSON.stringify(args.camera) === this.lastCamera
         );
         this.lastCamera = JSON.stringify(args.camera);
+
+        this.sensorService
+            .getSensorsInArea(
+                args.camera.latitude,
+                args.camera.longitude,
+                args.camera.zoom
+            )
+            .do(sensors => {
+                this.mapView.removeAllShapes();
+
+                for (const sensor of sensors) {
+                    const circle = this.createCircle(sensor);
+
+                    this.mapView.addCircle(circle);
+                }
+            })
+            .subscribe();
     }
 }

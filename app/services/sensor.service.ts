@@ -17,9 +17,20 @@ const headers = new Headers({ "Content-Type": "application/json" });
 export class SensorService {
     constructor(private http: Http, private local: LocalStorageService) {}
 
+    getSensorsInArea(lon: number, lat: number, zoom: number): Observable<Sensor[]> {
+        const radius = (40000 / Math.pow(2, zoom));
+        const url = `https://api.luftdaten.info/v1/filter/area=${lon},${lat},${radius}&type=SDS011`;
+        console.log("url: " + url);
+        return this.getSensorData(url);
+    }
+
     getAllDustSensors(): Observable<Sensor[]> {
+        return this.getSensorData(getAllUrlLocal);
+    }
+
+    getSensorData(url: string): Observable<Sensor[]> {
         return this.http
-            .get(getAllUrlLocal, {
+            .get(url, {
                 headers
             })
             .map(res => {
@@ -119,7 +130,7 @@ export class SensorService {
         }
 
         sensor.measurements.push(measurement);
-        console.dir(sensor);
+        // console.dir(sensor);
         return sensor;
     }
 }
