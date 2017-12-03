@@ -1,6 +1,6 @@
 import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
-
+import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { MapComponent } from "./map/map.component";
 import { SettingsComponent } from "./settings/settings.component";
 import { TabsRoutingModule } from "./tabs-routing.module";
@@ -9,7 +9,10 @@ import { FavouritesComponent } from "./favourites/favourites.component";
 import { SensorDetailsComponent } from "./sensor-details/sensor-details.component";
 
 @NgModule({
-    imports: [NativeScriptModule, TabsRoutingModule],
+    imports: [
+        NativeScriptModule, 
+        NativeScriptFormsModule,
+        TabsRoutingModule],
     declarations: [
         TabsComponent,
         MapComponent,

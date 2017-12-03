@@ -1,3 +1,14 @@
-<GridLayout class="page">
-    <Label text="Page content goes here"></Label>
+<GridLayout class="page" columns="* auto" rows="auto, auto, auto, auto, auto, auto">
+    <Label text="Notify on High levels" col="0" row="0"></Label>
+    <Switch [(ngModel)]="notificationEnabled" col="1" row="0"></Switch>
+
+    <Label text="Notify if Level is above:" col="0" row="1" *ngIf="notificationEnabled"></Label>
+    <Label [text]="sliderPolutionValue" col="1" row="1" *ngIf="notificationEnabled"></Label>
+    <Slider [(ngModel)]="sliderPolutionValue" minValue="30" maxValue="500" col="0" row="2" colSpan="2" *ngIf="notificationEnabled"></Slider>
+
+    <Label text="After notifying keep silence for:" col="0" row="3" *ngIf="notificationEnabled"></Label>
+    <Label [text]="sliderSilenceValue + ' hours'" col="1" row="3" *ngIf="notificationEnabled"></Label>
+    <Slider [(ngModel)]="sliderSilenceValue" minValue="1" maxValue="24" col="0" row="4" colSpan="2" *ngIf="notificationEnabled"></Slider>
+
+    <Button text="Save" col="0" row="5" colSpan="2" (onTap)="saveSettings()"></Button>
 </GridLayout>
