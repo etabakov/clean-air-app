@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
-import { Sensor } from "../models/sensor.model";
+import { Sensor, Measurement } from "../models/sensor.model";
 import { LocalStorageService } from "./local-storage.service";
 import { selectedIndexProperty } from "tns-core-modules/ui/tab-view/tab-view";
 
@@ -24,14 +24,21 @@ export class SensorService {
             })
             .map(res => {
                 const rawData: Array<any> = res.json();
+                console.log("DATA: " + rawData.length);
+
                 // console.log("RAW:");
                 // console.dir(rawData);
 
-                const sensors = rawData.map(d => this.parseSensorData(d));
-                // console.log("RESULTS:");
-                // console.dir(sensors);
+                const sensorMap = new Map<string, Sensor>();
 
-                return sensors;
+                const sensors = rawData.forEach(d =>
+                    this.parseSensorData(d, sensorMap)
+                );
+
+                const result = Array.from(sensorMap.values());
+                // console.log("RESULTS: " + result.length);
+
+                return result;
             });
     }
 
@@ -74,31 +81,45 @@ export class SensorService {
 
             const element = rawData.length ? rawData[rawData.length - 1] : null;
 
-            return this.parseSensorData(element);
+            return this.parseSensorData(element, new Map<string, Sensor>());
         });
     }
 
-    private parseSensorData(element: any): Sensor {
+    private parseSensorData(
+        element: any,
+        sensorMap: Map<string, Sensor>
+    ): Sensor {
         if (!element) {
             return null;
         }
 
-        const p100 = element.sensordatavalues[0]
+        const f100 = element.sensordatavalues[0]
             ? element.sensordatavalues[0].value
             : NaN;
-        const p25 = element.sensordatavalues[1]
+        const f25 = element.sensordatavalues[1]
             ? element.sensordatavalues[1].value
             : NaN;
 
+        const measurement: Measurement = {
+            f100,
+            f25,
+            timestamp: element.timestamp
+        };
+
         const id = element.sensor.id;
-        return new Sensor(
-            element.sensor.id,
-            element.timestamp,
-            parseFloat(element.location.latitude),
-            parseFloat(element.location.longitude),
-            p100,
-            p25,
-            this.local.isFav(id)
-        );
+        let sensor: Sensor = sensorMap.get(id);
+        if (!sensor) {
+            sensor = {
+                id,
+                latitude: parseFloat(element.location.latitude),
+                longitude: parseFloat(element.location.longitude),
+                measurements: []
+            };
+            sensorMap.set(id, sensor);
+        }
+
+        sensor.measurements.push(measurement);
+        console.dir(sensor);
+        return sensor;
     }
 }

@@ -67,7 +67,7 @@ export class MapComponent {
         circle.radius = 100;
         circle.strokeWidth = 0;
 
-        circle.fillColor = this.getColor(sensor.f100);
+        circle.fillColor = this.getColor(sensor.measurements[0].f100);
         circle.clickable = true;
         circle.userData = sensor;
         return circle;

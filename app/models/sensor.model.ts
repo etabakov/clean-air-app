@@ -1,11 +1,16 @@
-export class Sensor {
-    constructor(
-        public id: number,
-        public timestamp: Date,
-        public latitude: number,
-        public longitude: number,
-        public f100: number,
-        public f25: number,
-        public isFav?: boolean
-    ) {}
+export interface Sensor {
+    id: number;
+
+    latitude: number;
+    longitude: number;
+
+    isFav?: boolean;
+
+    measurements: Measurement[];
+}
+
+export interface Measurement {
+    timestamp: Date;
+    f100: number;
+    f25: number;
 }
