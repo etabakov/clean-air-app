@@ -17,9 +17,15 @@ const headers = new Headers({ "Content-Type": "application/json" });
 export class SensorService {
     constructor(private http: Http, private local: LocalStorageService) {}
 
-    getSensorsInArea(lon: number, lat: number, zoom: number): Observable<Sensor[]> {
-        const radius = (40000 / Math.pow(2, zoom));
-        const url = `https://api.luftdaten.info/v1/filter/area=${lon},${lat},${radius}&type=SDS011`;
+    getSensorsInArea(
+        lon: number,
+        lat: number,
+        zoom: number
+    ): Observable<Sensor[]> {
+        const radius = 40000 / Math.pow(2, zoom);
+        const url = `https://api.luftdaten.info/v1/filter/area=${lon},${lat},${
+            radius
+        }&type=SDS011`;
         console.log("url: " + url);
         return this.getSensorData(url);
     }
@@ -48,6 +54,11 @@ export class SensorService {
 
                 const result = Array.from(sensorMap.values());
                 // console.log("RESULTS: " + result.length);
+
+                const favs = this.local.getFavIds();
+                result.forEach(s => {
+                    s.isFav = favs.indexOf(s.id) >= 0;
+                });
 
                 return result;
             });
@@ -78,7 +89,7 @@ export class SensorService {
         if (sensorIds.length) {
             return Observable.from(sensorIds)
                 .map(id => {
-                    return this.getSensorByID(id);
+                    return this.getSensorByID(id).do(s => (s.isFav = true));
                 })
                 .combineAll();
         } else {
@@ -90,9 +101,19 @@ export class SensorService {
         return this.http.get(singleSensorUrl + id, { headers }).map(res => {
             const rawData: Array<any> = res.json();
 
-            const element = rawData.length ? rawData[rawData.length - 1] : null;
-
-            return this.parseSensorData(element, new Map<string, Sensor>());
+            if (rawData.length) {
+                return this.parseSensorData(
+                    rawData[rawData.length - 1],
+                    new Map<string, Sensor>()
+                );
+            } else {
+                return {
+                    id,
+                    latitude: NaN,
+                    longitude: NaN,
+                    measurements: []
+                };
+            }
         });
     }
 

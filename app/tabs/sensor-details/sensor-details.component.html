@@ -1,8 +1,8 @@
 <GridLayout rows="auto auto" columns="auto auto *" class="sensor-detail">
     <Label [text]="'id: ' + sensor?.id" col="0"></Label>
-    <Label [text]="'time: ' + (sensor?.measurements[0].timestamp | date: 'MMM d, HH:mm')" col="1"></Label>
-    <Label [text]="'F100: ' + sensor?.measurements[0].f100" row="1" col="0"></Label>
-    <Label [text]="'F25: ' + sensor?.measurements[0].f25" row="1" col="1"></Label>
+    <Label [text]="'time: ' + (sensor?.measurements[0]?.timestamp | date: 'MMM d, HH:mm')" col="1"></Label>
+    <Label [text]="'F100: ' + sensor?.measurements[0]?.f100" row="1" col="0"></Label>
+    <Label [text]="'F25: ' + sensor?.measurements[0]?.f25" row="1" col="1"></Label>
 
     <Label class="fa fav" [text]="sensor?.isFav ? '\uf005' :'\uf006'" col="3" rowSpan="2"
         (tap)="toggle.next(sensor)"></Label>
