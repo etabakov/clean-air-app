@@ -4,6 +4,9 @@ import { Observable } from "rxjs/Observable";
 import { Sensor, Measurement } from "../models/sensor.model";
 import { LocalStorageService } from "./local-storage.service";
 import { selectedIndexProperty } from "tns-core-modules/ui/tab-view/tab-view";
+import { Store } from "@ngrx/store";
+import { AppState } from "../store/reducers";
+import { Add, Remove } from "../store/reducers/favourites";
 
 // const getAllURL = "https://api.luftdaten.info/static/v2/data.dust.min.json";
 const getAllUrlLocal =
@@ -15,7 +18,7 @@ const headers = new Headers({ "Content-Type": "application/json" });
 
 @Injectable()
 export class SensorService {
-    constructor(private http: Http, private local: LocalStorageService) {}
+    constructor(private http: Http, private store: Store<AppState>) {}
 
     getSensorsInArea(
         lon: number,
@@ -39,7 +42,8 @@ export class SensorService {
             .get(url, {
                 headers
             })
-            .map(res => {
+            .combineLatest(this.store.select(s => s.favs.favIds))
+            .map(([res, favs]) => {
                 const rawData: Array<any> = res.json();
                 console.log("DATA: " + rawData.length);
 
@@ -55,7 +59,8 @@ export class SensorService {
                 const result = Array.from(sensorMap.values());
                 // console.log("RESULTS: " + result.length);
 
-                const favs = this.local.getFavIds();
+                // const favs = this.local.getFavIds();
+                // const favs = this.store.select(s => s.favs.favIds).
                 result.forEach(s => {
                     s.isFav = favs.indexOf(s.id) >= 0;
                 });
@@ -64,38 +69,33 @@ export class SensorService {
             });
     }
 
-    addFav(sensor: Sensor) {
-        this.local.addFav(sensor.id);
-        sensor.isFav = true;
-    }
-
-    removeFav(sensor: Sensor) {
-        this.local.removeFav(sensor.id);
-        sensor.isFav = false;
-    }
-
     toggleFav(sensor: Sensor) {
         if (sensor.isFav) {
-            this.removeFav(sensor);
+            // this.local.removeFav(sensor.id);
+            this.store.dispatch(new Remove(sensor.id));
+            sensor.isFav = false;
         } else {
-            this.addFav(sensor);
+            // this.local.addFav(sensor.id);
+            this.store.dispatch(new Add(sensor.id));
+            sensor.isFav = true;
         }
     }
 
-    getFavs(): Observable<Sensor[]> {
-        const sensorIds = this.local.getFavIds();
-        console.dir(sensorIds);
+    // getFavs(): Observable<Sensor[]> {
+    //     // const sensorIds = this.local.getFavIds();
+    //     // console.dir(sensorIds);
 
-        if (sensorIds.length) {
-            return Observable.from(sensorIds)
-                .map(id => {
-                    return this.getSensorByID(id).do(s => (s.isFav = true));
-                })
-                .combineAll();
-        } else {
-            return Observable.from([]);
-        }
-    }
+    //     // if (sensorIds.length) {
+    //     //     return Observable.from(this.store.select(s=>s.favs.favIds).last()
+    //     //         .map(id => {
+    //     //             return this.getSensorByID(id).do(s => (s.isFav = true));
+    //     //         })
+    //     //         .combineAll();
+    //     // } else {
+    //     //     return Observable.from([]);
+    //     // }
+    //     this.store.last().
+    // }
 
     private getSensorByID(id: number): Observable<Sensor> {
         return this.http.get(singleSensorUrl + id, { headers }).map(res => {

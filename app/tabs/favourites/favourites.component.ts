@@ -15,7 +15,7 @@ export class FavouritesComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.sensors$ = this.sensorService.getFavs();
+        // this.sensors$ = this.sensorService.getFavs();
     }
     
     toggleFav(sensor: Sensor) {
