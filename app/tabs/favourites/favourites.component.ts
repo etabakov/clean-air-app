@@ -15,6 +15,8 @@ export class FavouritesComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log("FavouritesComponent ngOnInit");
+        
         // this.sensors$ = this.sensorService.getFavs();
     }
     

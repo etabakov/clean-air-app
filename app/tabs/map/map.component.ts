@@ -89,8 +89,6 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     onCameraChanged(args: CameraEventData) {
-        console.log("Camera changed: " + JSON.stringify(args.camera));
-
         this.store$.dispatch(
             new SetViewport({
                 latitude: args.camera.latitude,
@@ -98,21 +96,5 @@ export class MapComponent implements OnInit, OnDestroy {
                 zoom: args.camera.zoom
             })
         );
-
-        // const size = getSizeForZoom(args.camera.zoom);
-        // this.sensorService
-        //     .getSensorsInArea(args.camera.latitude, args.camera.longitude, args.camera.zoom)
-        //     .do(sensors => {
-        //         this.mapView.removeAllShapes();
-        //         const selectedId = this.selectedSensor ? this.selectedSensor.id : -1;
-        //         sensors.map(s => createCircle(s, size)).forEach(circle => {
-        //             this.mapView.addCircle(circle);
-        //             if (circle.userData.id === selectedId) {
-        //                 this.selectedShape = circle;
-        //                 updateCircle(circle, circle.userData, true);
-        //             }
-        //         });
-        //     })
-        //     .subscribe();
     }
 }

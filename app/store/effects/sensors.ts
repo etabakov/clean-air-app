@@ -25,7 +25,7 @@ export class SensorsEffects {
         const lon = action.payload.longitude;
         const url = `https://api.luftdaten.info/v1/filter/area=${lat},${lon},${radius}&type=SDS011`;
 
-        console.log("url: " + url);
+        console.log("Sensors get: " + url);
         return this.getSensorData(url).map(sensors => new SetSensors(sensors));
     });
 
@@ -34,27 +34,17 @@ export class SensorsEffects {
             .get(url, { headers })
             .combineLatest(this.store$.select(s => s.favs.favIds))
             .map(([res, favs]) => {
-                console.log("Res: " + res);
-                console.log("favs: " + favs);
-
                 const rawData: Array<any> = res.json();
-                console.log("DATA: " + rawData.length);
-
-                // console.log("RAW:");
-                // console.dir(rawData);
-
                 const sensorMap = new Map<string, Sensor>();
-
                 const sensors = rawData.forEach(d => parseSensorData(d, sensorMap));
 
                 const result = Array.from(sensorMap.values());
-                // console.log("RESULTS: " + result.length);
 
-                // const favs = this.local.getFavIds();
-                // const favs = this.store.select(s => s.favs.favIds).
                 result.forEach(s => {
                     s.isFav = favs.indexOf(s.id) >= 0;
                 });
+
+                console.log("Sensors retrieved: " + result.length);
 
                 return result;
             });
