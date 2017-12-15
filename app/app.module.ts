@@ -10,12 +10,12 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 
 import { SensorService } from "./services/sensor.service";
-import { LocalStorageService } from "./services/local-storage.service";
 
 import { registerElement } from "nativescript-angular/element-registry";
 import { isIOS } from "platform";
+
 import { reducers, metaReducers } from "./store/reducers";
-import { FavouritesEffects } from "./store/effects";
+import { FavouritesEffects, SensorsEffects } from "./store/effects";
 
 // Google Maps Setup
 registerElement("MapView", () => require("nativescript-google-maps-sdk").MapView);
@@ -33,13 +33,15 @@ if (isIOS) {
         NativeScriptFormsModule,
         AppRoutingModule,
         StoreModule.forRoot(reducers, { metaReducers }),
-        EffectsModule.forRoot([FavouritesEffects])
+        EffectsModule.forRoot([
+            FavouritesEffects,
+            SensorsEffects
+            ])
     ],
     declarations: [AppComponent],
     providers: [
         { provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader },
-        SensorService,
-        LocalStorageService
+        SensorService
     ],
     schemas: [NO_ERRORS_SCHEMA]
 })

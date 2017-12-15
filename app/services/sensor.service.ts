@@ -2,11 +2,10 @@ import { Injectable } from "@angular/core";
 import { Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { Sensor, Measurement } from "../models/sensor.model";
-import { LocalStorageService } from "./local-storage.service";
 import { selectedIndexProperty } from "tns-core-modules/ui/tab-view/tab-view";
 import { Store } from "@ngrx/store";
 import { AppState } from "../store/reducers";
-import { Add, Remove } from "../store/reducers/favourites";
+import { AddFav, RemoveFav } from "../store/reducers/favourites";
 
 // const getAllURL = "https://api.luftdaten.info/static/v2/data.dust.min.json";
 const getAllUrlLocal =
@@ -72,11 +71,11 @@ export class SensorService {
     toggleFav(sensor: Sensor) {
         if (sensor.isFav) {
             // this.local.removeFav(sensor.id);
-            this.store.dispatch(new Remove(sensor.id));
+            this.store.dispatch(new RemoveFav(sensor.id));
             sensor.isFav = false;
         } else {
             // this.local.addFav(sensor.id);
-            this.store.dispatch(new Add(sensor.id));
+            this.store.dispatch(new AddFav(sensor.id));
             sensor.isFav = true;
         }
     }

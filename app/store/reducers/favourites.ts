@@ -4,17 +4,17 @@ export const FAV_ADD = "[Fav] Add Favourite";
 export const FAV_REMOVE = "[Fav] Remove Favourite";
 export const FAV_SET = "[Fav] Set Favourite";
 
-export class Add implements Action {
+export class AddFav implements Action {
     readonly type = FAV_ADD;
     constructor(public payload: number) {}
 }
 
-export class Remove implements Action {
+export class RemoveFav implements Action {
     readonly type = FAV_REMOVE;
     constructor(public payload: number) {}
 }
 
-export class Set implements Action {
+export class SetFav implements Action {
     readonly type = FAV_SET;
     constructor(public payload: number[]) {}
 }
@@ -27,7 +27,7 @@ export const initialState: Favourites = {
     favIds: []
 };
 
-export type All = Add | Remove | Set;
+export type All = AddFav | RemoveFav | SetFav;
 
 export function favsReducer(state: Favourites = initialState, action: All) {
     switch (action.type) {
